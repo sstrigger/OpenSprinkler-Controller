@@ -608,7 +608,7 @@ function get_options() {
 #Get OpenSprinkler settings
 function get_settings() {
     $data = get_from_os("");
-    preg_match_all("/(ver|devt|nbrd|tz|en|rd|rs|mm|rdst|mas|urs|wl|ipas|loc|cputemp|tempunit)\s?[=|:]\s?[\"|']?([\w|\d]+)[\"|']?/", $data, $matches);
+    preg_match_all("/(ver|devt|nbrd|tz|en|rd|rs|mm|rdst|mas|urs|wl|ipas|loc|cputemp|tempunit)\s?[=|:]\s?[\"|']?([\w|\d|.]+)[\"|']?/", $data, $matches);
     preg_match("/lrun=\[(.*)\]/", $data, $lrun);
     preg_match("/ps=\[(.*)\];/",$data,$ps);
     $ps = explode("],[",$ps[1]);
