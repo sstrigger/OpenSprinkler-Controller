@@ -344,7 +344,7 @@ function isOSPi() {
 #Get station names
 function get_stations() {
     $data = get_from_os("/vs");
-    preg_match("/snames=\[(.*)\];/", $data, $matches);
+    preg_match("/snames=\[(.*)\]/", $data, $matches);
     $rawstations = str_getcsv($matches[1],",","'");
     preg_match("/(?:nboards|nbrd)\s?[=|:]\s?(\d+)/", $data, $matches);
     $total = $matches[1] * 8; $current = 1;
@@ -608,8 +608,7 @@ function get_options() {
 #Get OpenSprinkler settings
 function get_settings() {
     $data = get_from_os("");
-    preg_match_all("/(ver|devt|nbrd|tz|en|rd|rs|mm|rdst|mas|urs|wl|ipas)\s?[=|:]\s?([\w|\d|.\"]+)/", $data, $matches);
-    preg_match("/loc(\s)?[=|:](\s)?[\"|'](.*)[\"|']/",$data,$loc);
+    preg_match_all("/(ver|devt|nbrd|tz|en|rd|rs|mm|rdst|mas|urs|wl|ipas|loc|cputemp|tempunit)\s?[=|:]\s?[\"|']?([\w|\d]+)[\"|']?/", $data, $matches);
     preg_match("/lrun=\[(.*)\]/", $data, $lrun);
     preg_match("/ps=\[(.*)\];/",$data,$ps);
     $ps = explode("],[",$ps[1]);
@@ -618,7 +617,7 @@ function get_settings() {
         $ps[$i] = explode(",",str_replace(array("[","]"), "", $ps[$i]));
         $i++;
     }
-    $newdata = array("ps" => $ps, "lrun" => explode(",", $lrun[1]), "loc" => $loc[1]);
+    $newdata = array("ps" => $ps, "lrun" => explode(",", $lrun[1]));
     $i = 0;
     foreach ($matches[1] as $variable) {
         if ($variable === "") continue;
@@ -1316,6 +1315,7 @@ function make_list_status() {
     $tz = (($tz>=0) ? "+" : "-").(abs($tz)/4>>0).":".((abs($tz)%4)*15/10>>0).((abs($tz)%4)*15%10);
 
     $header = "<span id='clock-s' class='nobr'>".gmdate("D, d M Y H:i:s",$settings["devt"])."</span> GMT ".$tz;
+    $header .= " <span id='temp'>".$settings["cputemp"]."&deg;".$settings["tempunit"]."</span>";
     $runningTotal["c"] = $settings["devt"];
     $master = $settings["mas"]; $i = 0; $ptotal = 0;
 
