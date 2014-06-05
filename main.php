@@ -608,7 +608,7 @@ function get_options() {
 #Get OpenSprinkler settings
 function get_settings() {
     $data = get_from_os("");
-    preg_match_all("/(ver|devt|nbrd|tz|en|rd|rs|mm|rdst|mas|urs|wl|ipas|loc|cputemp|tempunit)\s?[=|:]\s?[\"|']?([\w|\d|.]+)[\"|']?/", $data, $matches);
+    preg_match_all("/(ver|devt|nbrd|tz|en|rd|rs|mm|rdst|mas|urs|wl|ipas|loc|ct|tu)\s?[=|:]\s?[\"|']?([\w|\d|.]+)[\"|']?/", $data, $matches);
     preg_match("/lrun=\[(.*)\]/", $data, $lrun);
     preg_match("/ps=\[(.*)\];/",$data,$ps);
     $ps = explode("],[",$ps[1]);
@@ -1315,7 +1315,8 @@ function make_list_status() {
     $tz = (($tz>=0) ? "+" : "-").(abs($tz)/4>>0).":".((abs($tz)%4)*15/10>>0).((abs($tz)%4)*15%10);
 
     $header = "<span id='clock-s' class='nobr'>".gmdate("D, d M Y H:i:s",$settings["devt"])."</span> GMT ".$tz;
-    $header .= " <span id='temp'>".$settings["cputemp"]."&deg;".$settings["tempunit"]."</span>";
+    if (isset($settings["ct"]) && $settings["ct"])
+        $header .= " <span id='temp'>".$settings["ct"]."&deg;".$settings["tu"]."</span>";
     $runningTotal["c"] = $settings["devt"];
     $master = $settings["mas"]; $i = 0; $ptotal = 0;
 
